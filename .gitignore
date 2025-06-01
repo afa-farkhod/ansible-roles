@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ansible retry files
+*.retry
+
+# SSH key files and sensitive credentials
+*.pem
+*.key
+*.crt
+*.pub
+*.vault_pass
+vault_pass.txt
+.vault_pass.txt
+
+# Secrets and environment files
+.env
+*.env
+*.secrets
+*.secret
+
+# Editor and OS-specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python virtual environments
+venv/
+ENV/
+.env/
+.venv/
+
+# Ansible Galaxy installed roles (if applicable)
+roles/
+!roles/requirements.yml
+
+# Test artifacts
+tests/output/
+tests/tmp/
+tests/.pytest_cache/
+tests/__pycache__/
+
+# Molecule test directories (if used)
+molecule/*/logs/
+molecule/*/output/
+molecule/*/.molecule/
+
+# Log files
+*.log
+
+# Backup files
+*.bak
+*.old
+*.orig
