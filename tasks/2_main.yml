@@ -1,0 +1,55 @@
+---
+# Configure router interfaces using L3 interface configuration
+- name: Configure FastEthernet0/1 interface
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'configure terminal; interface FastEthernet0/1; ip address {{ routers[inventory_hostname].interfaces.f0_1.ip }} {{ routers[inventory_hostname].interfaces.f0_1.mask }}; description {{ routers[inventory_hostname].interfaces.f0_1.description }}; no shutdown; exit'
+  register: int_result
+  tags: 
+    - interfaces
+    - config
+
+- name: Save configuration
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'copy running-config startup-config'
+  tags: 
+    - interfaces
+    - config
+
+- name: Gather interface facts before
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'show ip interface brief'
+  register: int_before
+  tags: 
+    - interfaces
+
+- name: Display interface before configuration
+  debug:
+    msg: "Interfaces before: {{ int_before.stdout_lines }}"
+  tags: 
+    - interfaces
+    - display
+
+- name: Display commands executed
+  debug:
+    msg: "Commands executed for interface configuration on {{ inventory_hostname }}"
+  tags: 
+    - interfaces
+    - display
+
+- name: Gather interface facts after
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'show ip interface brief'
+  register: int_after
+  tags: 
+    - interfaces
+
+- name: Display interface after configuration
+  debug:
+    msg: "Interfaces after: {{ int_after.stdout_lines }}"
+  tags: 
+    - interfaces
+    - display

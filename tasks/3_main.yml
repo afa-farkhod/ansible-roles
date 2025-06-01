@@ -1,0 +1,34 @@
+---
+# Configure NTP servers on routers
+- name: Configure NTP servers
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'configure terminal; {% for ntp_server in routers[inventory_hostname].ntp_servers %}ntp server {{ ntp_server }}; {% endfor %}exit'
+  register: ntp_config
+  tags: 
+    - ntp
+    - config
+
+- name: Save NTP configuration
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'copy running-config startup-config'
+  tags: 
+    - ntp
+    - config
+
+- name: Verify NTP configuration
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'show run | inc ntp'
+  register: ntp_verification
+  tags: 
+    - ntp
+    - display
+
+- name: Display NTP configuration
+  debug:
+    msg: "NTP servers configured on {{ inventory_hostname }}: {{ ntp_verification.stdout_lines }}"
+  tags: 
+    - ntp
+    - display

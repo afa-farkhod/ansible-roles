@@ -1,3 +1,37 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for MN521-AnsibleLab-Role
+# Main tasks for network automation
+
+# Hostname configuration tasks
+- name: Gather initial facts
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'show running-config | include hostname'
+  register: initial_facts
+  tags: 
+    - hostname
+    - facts
+    - display
+
+- name: Display initial hostname
+  debug:
+    msg: "Initial hostname for {{ inventory_hostname }}: {{ initial_facts.stdout }}"
+  tags: 
+    - hostname
+    - display
+
+- name: Set router hostname
+  shell: |
+    sshpass -p '{{ ansible_password }}' ssh {{ ssh_common_args }} \
+    {{ ansible_user }}@{{ ansible_host }} 'configure terminal; hostname {{ router_hostname }}; exit; copy running-config startup-config'
+  register: hostname_result
+  tags: 
+    - hostname
+    - config
+
+# Include interface configuration tasks
+- include_tasks: 2_main.yml
+  tags: interfaces
+
+# Include NTP configuration tasks
+- include_tasks: 3_main.yml
+  tags: ntp

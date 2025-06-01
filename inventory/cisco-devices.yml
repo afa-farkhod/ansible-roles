@@ -1,0 +1,12 @@
+cisco_devices:
+  hosts:
+    Router1:
+      ansible_host: 172.16.159.137
+      router_hostname: FirstRouter
+    Router2:
+      ansible_host: 172.16.159.138
+      router_hostname: SecondRouter
+  vars:
+    ansible_user: cisco
+    ansible_password: cisco
+    ansible_connection: local

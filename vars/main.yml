@@ -1,3 +1,16 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# vars file for MN521-AnsibleLab-Role
+# Variables for network automation
+ssh_common_args: "-o KexAlgorithms=+diffie-hellman-group1-sha1 -o Ciphers=+aes128-cbc -o HostKeyAlgorithms=+ssh-rsa -o StrictHostKeyChecking=no"
+
+# Router configurations
+routers:
+  Router1:
+    hostname: FirstRouter
+    interfaces:
+      f0_1:
+        ip: 192.168.15.1
+        mask: 255.255.255.0
+        description: "Updated LAN Interface Router1"
+    ntp_servers:
+      - 8.8.8.8
+      - 1.1.1.1
